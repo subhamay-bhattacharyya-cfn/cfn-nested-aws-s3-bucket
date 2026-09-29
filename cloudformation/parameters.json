@@ -1,0 +1,10 @@
+{
+  "ProjectName": "subhamay",
+  "BucketBaseName": "cfn-bucket-test",
+  "Environment": "devl",
+  "CiSuffix": "",
+  "KmsKey": "alias/my-key",
+  "EnableBucketKey": "true",
+  "EnableLogging": "false",
+  "WebsiteConfiguration": "true"
+}

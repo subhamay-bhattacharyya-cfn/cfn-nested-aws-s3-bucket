@@ -1,101 +1,90 @@
-# CloudFormation S3 Template Repository
+# CloudFormation Template: S3 Bucket
 
 <!-- Row 1: Status - Most Important -->
-[![Release](https://github.com/subhamay-bhattacharyya-cfn/cloudformation-template/actions/workflows/release.yaml/badge.svg)](https://github.com/subhamay-bhattacharyya-cfn/cloudformation-template)&nbsp;[![GitHub Repo](https://img.shields.io/badge/GitHub-Repository-blue?logo=github)](https://github.com/subhamay-bhattacharyya-cfn/cloudformation-template)&nbsp;[![Issues](https://img.shields.io/github/issues/subhamay-bhattacharyya-cfn/cloudformation-template)](https://github.com/subhamay-bhattacharyya-cfn/cloudformation-template/issues)&nbsp;[![Last Commit](https://img.shields.io/github/last-commit/subhamay-bhattacharyya-cfn/cloudformation-template)](https://github.com/subhamay-bhattacharyya-cfn/cloudformation-template/commits)
+[![Release](https://github.com/subhamay-bhattacharyya-cfn/cfn-nested-aws-s3-bucket/actions/workflows/release.yaml/badge.svg)](https://github.com/subhamay-bhattacharyya-cfn/cfn-nested-aws-s3-bucket)&nbsp;[![GitHub Repo](https://img.shields.io/badge/GitHub-Repository-blue?logo=github)](https://github.com/subhamay-bhattacharyya-cfn/cfn-nested-aws-s3-bucket)&nbsp;[![Issues](https://img.shields.io/github/issues/subhamay-bhattacharyya-cfn/cfn-nested-aws-s3-bucket)](https://github.com/subhamay-bhattacharyya-cfn/cfn-nested-aws-s3-bucket/issues)&nbsp;[![Last Commit](https://img.shields.io/github/last-commit/subhamay-bhattacharyya-cfn/cfn-nested-aws-s3-bucket)](https://github.com/subhamay-bhattacharyya-cfn/cfn-nested-aws-s3-bucket/commits)
 
 <!-- Row 2: Code Quality -->
-[![Top Language](https://img.shields.io/github/languages/top/subhamay-bhattacharyya-cfn/cloudformation-template)](https://github.com/subhamay-bhattacharyya-cfn/cloudformation-template)&nbsp;[![Commits](https://img.shields.io/github/commit-activity/t/subhamay-bhattacharyya-cfn/cloudformation-template)](https://github.com/subhamay-bhattacharyya-cfn/cloudformation-template/commits)
+[![Top Language](https://img.shields.io/github/languages/top/subhamay-bhattacharyya-cfn/cfn-nested-aws-s3-bucket)](https://github.com/subhamay-bhattacharyya-cfn/cfn-nested-aws-s3-bucket)&nbsp;[![Commits](https://img.shields.io/github/commit-activity/t/subhamay-bhattacharyya-cfn/cfn-nested-aws-s3-bucket)](https://github.com/subhamay-bhattacharyya-cfn/cfn-nested-aws-s3-bucket/commits)
 
 <!-- Row 3: Tech Stack -->
 [![CloudFormation](https://img.shields.io/badge/CloudFormation-IaC-orange?logo=amazon&logoColor=white)](https://aws.amazon.com/cloudformation/)&nbsp;[![Built with Claude Code](https://img.shields.io/badge/Built_with-Claude_Code-D97757?logo=anthropic&logoColor=white)](https://claude.ai/)
 
 <!-- Row 4: Repository Info -->
-[![Files](https://img.shields.io/github/directory-file-count/subhamay-bhattacharyya-cfn/cloudformation-template)](https://github.com/subhamay-bhattacharyya-cfn/cloudformation-template)&nbsp;[![Repo Size](https://img.shields.io/github/repo-size/subhamay-bhattacharyya-cfn/cloudformation-template)](https://github.com/subhamay-bhattacharyya-cfn/cloudformation-template)&nbsp;[![Release Date](https://img.shields.io/github/release-date/subhamay-bhattacharyya-cfn/cloudformation-template)](https://github.com/subhamay-bhattacharyya-cfn/cloudformation-template/releases)
+[![Files](https://img.shields.io/github/directory-file-count/subhamay-bhattacharyya-cfn/cfn-nested-aws-s3-bucket)](https://github.com/subhamay-bhattacharyya-cfn/cfn-nested-aws-s3-bucket)&nbsp;[![Repo Size](https://img.shields.io/github/repo-size/subhamay-bhattacharyya-cfn/cfn-nested-aws-s3-bucket)](https://github.com/subhamay-bhattacharyya-cfn/cfn-nested-aws-s3-bucket)&nbsp;[![Release Date](https://img.shields.io/github/release-date/subhamay-bhattacharyya-cfn/cfn-nested-aws-s3-bucket)](https://github.com/subhamay-bhattacharyya-cfn/cfn-nested-aws-s3-bucket/releases)
 
 <!-- Row 5: Custom Metrics -->
-[![Custom Endpoint](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/bsubhamay/f55f73ac88992d4bd5c9835ee5fd70b6/raw/aws-vpc-cloudformation-fundamentals.json)](https://gist.github.com/subhamay-bhattacharyya/f55f73ac88992d4bd5c9835ee5fd70b6)
+[![Custom Endpoint](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/bsubhamay/bc68df66aeb973d594261ab6d6c45567/raw/cfn-nested-aws-s3-bucket.json)](https://gist.github.com/subhamay-bhattacharyya/bc68df66aeb973d594261ab6d6c45567)
 
-This repository contains nested CloudFormation templates for deploying S3 buckets with security best practices and optional policy enforcement.
+This repository contains a reusable nested CloudFormation template for deploying S3 buckets with enterprise-grade security best practices and flexible configuration options.
 
 ## Overview
 
-This is a **nested stack template** designed to be invoked from a parent/root CloudFormation stack. Templates are stored in this repository and should be uploaded to an S3 bucket for reference by parent stacks.
+This is a **nested stack template** designed to be invoked from a parent/root CloudFormation stack. The template is highly parameterized, supports multiple deployment scenarios, and includes comprehensive security controls.
 
 ## Template Files
 
 ### CloudFormation Templates
 
-- **`templates/s3-bucket.yaml`** — Nested template for S3 bucket creation (versioning, public access blocking)
-- **`templates/s3-bucket-policy.yaml`** — Optional nested template for S3 bucket policy (encryption enforcement, secure transport)
+- **`cloudformation/template.yaml`** — Complete S3 bucket template with encryption, logging, versioning, website hosting, and access logging
 
 ### Parameter Files
 
-- **`parameters/parameters.json`** — Parameter values for development environment
+- **`cloudformation/parameters.json`** — Key-value parameter file for deployment configuration
 
 ## Template Features
 
-### S3 Bucket Template (s3-bucket.yaml)
+### Core Features
 
-- ✅ Versioning enabled by default
-- ✅ Public Access Blocking
-- ✅ Smart bucket naming (project prefix, account ID, environment, region)
-- ✅ Optional CI suffix support
+- ✅ **Versioning** — Always enabled for data protection and recovery
+- ✅ **Public Access Blocking** — All four options enabled by default
+- ✅ **Smart Bucket Naming** — Automatic naming with project prefix, account ID, environment, and region
+- ✅ **Resource Tagging** — Automatic tags for ProjectName and Environment
 
-### S3 Bucket Policy Template (s3-bucket-policy.yaml)
+### Security Features
 
-- ✅ Encryption enforcement on uploads
-- ✅ Secure transport enforcement (HTTPS only)
-- ✅ Optional/conditional policy rules
+- ✅ **Dual Encryption Support** — SSE-S3 (default) or SSE-KMS (optional with flexible key formats)
+- ✅ **KMS Key Flexibility** — Accepts key name, alias, or full ARN for maximum compatibility
+- ✅ **Bucket Key Optimization** — Optional S3 Bucket Key to reduce KMS encryption costs
+- ✅ **Access Logging** — Optional S3 access logs stored in dedicated logging bucket
+
+### Optional Features
+
+- ✅ **Static Website Hosting** — Enable with one parameter (configurable index document)
+- ✅ **CI/CD Support** — Optional CI suffix for unique ephemeral deployments
+- ✅ **Access Logging** — Optional server access logging to separate bucket with public access blocking
 
 ## Parameters
 
-### S3 Bucket Parameters
+| Parameter | Type | Default | Required | Description |
+| ----------- | ------ | --------- | ---------- | ------------- |
+| `ProjectName` | String | — | ✅ Yes | Project name to use as bucket prefix |
+| `BucketBaseName` | String | `cfn-bucket` | No | Base name for S3 bucket (1-20 chars, alphanumeric/dash/dot only) |
+| `KmsKey` | String | `""` | No | KMS key for encryption: key name (`my-key`), alias (`alias/my-key`), or ARN (`arn:aws:kms:...`). Empty = SSE-S3 |
+| `Environment` | String | `devl` | No | Deployment environment (devl, stag, prod, or custom) |
+| `CiSuffix` | String | `""` | No | Optional CI suffix to append to bucket name for ephemeral deployments |
+| `WebsiteConfiguration` | String | `false` | No | Enable static website hosting (`true` or `false`). Sets index document to `index.html` |
+| `EnableLogging` | String | `false` | No | Enable S3 access logging (`true` or `false`). Creates dedicated logging bucket |
+| `EnableBucketKey` | String | `false` | No | Enable S3 Bucket Key for KMS cost optimization (`true` or `false`). Only effective with KMS encryption |
 
-| Parameter | Type | Default | Description |
-| ----------- | ------ | --------- | ------------- |
-| `ProjectName` | String | — | Project name to use as bucket prefix (required) |
-| `BucketBaseName` | String | `cfn-bucket` | Base name for S3 bucket |
-| `environment` | String | `devl` | Deployment environment (devl, stag, prod) |
-| `CiSuffix` | String | `""` | Optional CI suffix to append to bucket name |
-
-### S3 Bucket Policy Parameters
-
-**Generic (Standalone) Mode:**
-
-| Parameter | Type | Description |
-| ----------- | ------ | ------------- |
-| `BucketName` | String | Direct bucket name (use for any bucket) |
-
-**Integrated Mode (with bucket template):**
-
-| Parameter | Type | Default | Description |
-| ----------- | ------ | --------- | ------------- |
-| `ProjectName` | String | — | Project name (must match bucket template) |
-| `BucketBaseName` | String | `cfn-bucket` | Base name (must match bucket template) |
-| `environment` | String | `devl` | Environment (must match bucket template) |
-| `CiSuffix` | String | `""` | CI suffix (must match bucket template) |
-
-**Usage:** If `BucketName` is provided (non-empty), it takes precedence. Otherwise, the bucket name is constructed from ProjectName/BucketBaseName/environment/CiSuffix.
+**Notes:**
+- Only `ProjectName` is required; all other parameters have sensible defaults
+- `KmsKey` accepts three formats for maximum flexibility (auto-converts plain names to aliases)
+- `EnableBucketKey` requires a valid `KmsKey` to have effect (reduces KMS API calls and costs)
+- When `EnableLogging=true`, a separate logging bucket is created with identical security controls
 
 ## Outputs
 
-### S3 Bucket Template Outputs
-
-- `S3BucketName` — S3 bucket name
-- `S3BucketArn` — S3 bucket ARN
-
-### S3 Bucket Policy Template Outputs
-
-- `BucketName` — Bucket name with policy applied
-- `PolicyStatus` — Policy application status (Applied)
+| Output | Description |
+| ----------- | ------------- |
+| `S3BucketName` | Name of the created S3 bucket (exported for cross-stack references) |
+| `S3BucketArn` | ARN of the created S3 bucket (exported for cross-stack references) |
 
 ## Usage
 
-### 1. Upload Templates to S3
+### 1. Upload Template to S3
 
 ```bash
-aws s3 cp templates/s3-bucket.yaml s3://your-cfn-bucket/templates/s3-bucket.yaml
-aws s3 cp templates/s3-bucket-policy.yaml s3://your-cfn-bucket/templates/s3-bucket-policy.yaml
+aws s3 cp cloudformation/template.yaml s3://your-cfn-bucket/templates/s3-bucket.yaml
 ```
 
 ### 2. Reference from Parent Stack
@@ -110,23 +99,12 @@ S3BucketNestedStack:
     Parameters:
       ProjectName: !Ref ProjectName
       BucketBaseName: cfn-bucket
-      environment: !Ref Environment
+      Environment: !Ref Environment
       CiSuffix: !Ref CiSuffix
-    Tags:
-      - Key: Environment
-        Value: !Ref Environment
-
-S3PolicyNestedStack:
-  Type: AWS::CloudFormation::Stack
-  DependsOn: S3BucketNestedStack
-  Properties:
-    TemplateURL: https://s3.amazonaws.com/your-cfn-bucket/templates/s3-bucket-policy.yaml
-    Parameters:
-      BucketName: !GetAtt S3BucketNestedStack.Outputs.S3BucketName
-      ProjectName: ""
-      BucketBaseName: cfn-bucket
-      environment: !Ref Environment
-      CiSuffix: !Ref CiSuffix
+      KmsKey: !Ref KmsKeyParameter  # Optional: key name, alias, or ARN
+      WebsiteConfiguration: "false"  # Optional: enable static hosting
+      EnableLogging: "false"          # Optional: enable access logging
+      EnableBucketKey: "false"        # Optional: reduce KMS costs
     Tags:
       - Key: Environment
         Value: !Ref Environment
@@ -134,83 +112,84 @@ S3PolicyNestedStack:
 Outputs:
   BucketName:
     Value: !GetAtt S3BucketNestedStack.Outputs.S3BucketName
+    Export:
+      Name: !Sub "${AWS::StackName}-BucketName"
   BucketArn:
     Value: !GetAtt S3BucketNestedStack.Outputs.S3BucketArn
+    Export:
+      Name: !Sub "${AWS::StackName}-BucketArn"
 ```
 
 ### 3. Deploy Using AWS CLI
 
-#### Option A: Deploy Bucket Only
+#### Option A: Minimal Deployment (Default Security)
 
 ```bash
-# Development (without CI prefix)
 aws cloudformation create-stack \
   --stack-name cfn-s3-bucket-dev \
-  --template-body file://templates/s3-bucket.yaml \
-  --parameters file://parameters/dev.json
+  --template-body file://cloudformation/template.yaml \
+  --parameters file://cloudformation/parameters.json
+```
 
-# Staging (without CI prefix)
+#### Option B: Enable KMS Encryption
+
+```bash
 aws cloudformation create-stack \
-  --stack-name cfn-s3-bucket-stag \
-  --template-body file://templates/s3-bucket.yaml \
-  --parameters file://parameters/staging.json
+  --stack-name cfn-s3-bucket-dev \
+  --template-body file://cloudformation/template.yaml \
+  --parameters \
+    ParameterKey=ProjectName,ParameterValue=myproject \
+    ParameterKey=KmsKey,ParameterValue=alias/my-encryption-key \
+    ParameterKey=EnableBucketKey,ParameterValue=true
+```
 
-# Production (without CI prefix)
+#### Option C: Enable Access Logging
+
+```bash
+aws cloudformation create-stack \
+  --stack-name cfn-s3-bucket-dev \
+  --template-body file://cloudformation/template.yaml \
+  --parameters \
+    ParameterKey=ProjectName,ParameterValue=myproject \
+    ParameterKey=EnableLogging,ParameterValue=true
+```
+
+#### Option D: Enable Website Hosting
+
+```bash
+aws cloudformation create-stack \
+  --stack-name cfn-s3-bucket-dev \
+  --template-body file://cloudformation/template.yaml \
+  --parameters \
+    ParameterKey=ProjectName,ParameterValue=myproject \
+    ParameterKey=WebsiteConfiguration,ParameterValue=true
+```
+
+#### Option E: Full-Featured Deployment (All Options)
+
+```bash
 aws cloudformation create-stack \
   --stack-name cfn-s3-bucket-prod \
-  --template-body file://templates/s3-bucket.yaml \
-  --parameters file://parameters/prod.json
-```
-
-#### Option B: Deploy Bucket + Policy (Recommended)
-
-```bash
-# Deploy bucket first
-aws cloudformation create-stack \
-  --stack-name cfn-s3-bucket-dev \
-  --template-body file://templates/s3-bucket.yaml \
-  --parameters file://parameters/dev.json
-
-# Wait for bucket to be created
-aws cloudformation wait stack-create-complete --stack-name cfn-s3-bucket-dev
-
-# Get the bucket name from stack outputs
-BUCKET_NAME=$(aws cloudformation describe-stacks \
-  --stack-name cfn-s3-bucket-dev \
-  --query 'Stacks[0].Outputs[?OutputKey==`S3BucketName`].OutputValue' \
-  --output text)
-
-#### Using Integrated Mode (with bucket template parameters)
-
-```bash
-aws cloudformation create-stack \
-  --stack-name cfn-s3-policy-dev \
-  --template-body file://templates/s3-bucket-policy.yaml \
-  --parameters file://parameters/policy-dev.json
-```
-
-#### Using Generic Mode (standalone with direct bucket name)
-
-```bash
-aws cloudformation create-stack \
-  --stack-name cfn-s3-policy-dev \
-  --template-body file://templates/s3-bucket-policy.yaml \
-  --parameters \
-    ParameterKey=BucketName,ParameterValue=my-existing-bucket \
-    ParameterKey=ProjectName,ParameterValue=""
-```
-
-#### Option C: Deploy with CI Suffix
-
-```bash
-# Development with CI suffix (e.g., for GitLab CI)
-aws cloudformation create-stack \
-  --stack-name cfn-s3-bucket-dev-ci \
-  --template-body file://templates/s3-bucket.yaml \
+  --template-body file://cloudformation/template.yaml \
   --parameters \
     ParameterKey=ProjectName,ParameterValue=myproject \
     ParameterKey=BucketBaseName,ParameterValue=cfn-bucket \
-    ParameterKey=environment,ParameterValue=devl \
+    ParameterKey=Environment,ParameterValue=prod \
+    ParameterKey=KmsKey,ParameterValue=arn:aws:kms:us-east-1:123456789012:key/12345678-1234-1234-1234-123456789012 \
+    ParameterKey=EnableBucketKey,ParameterValue=true \
+    ParameterKey=EnableLogging,ParameterValue=true \
+    ParameterKey=WebsiteConfiguration,ParameterValue=true
+```
+
+#### Option F: Ephemeral Deployment with CI Suffix
+
+```bash
+# For CI/CD pipelines (e.g., GitLab CI)
+aws cloudformation create-stack \
+  --stack-name cfn-s3-bucket-dev-ci-$CI_PIPELINE_ID \
+  --template-body file://cloudformation/template.yaml \
+  --parameters \
+    ParameterKey=ProjectName,ParameterValue=myproject \
     ParameterKey=CiSuffix,ParameterValue=$CI_PIPELINE_ID
 ```
 
@@ -236,12 +215,23 @@ Example: `myproject-cfn-bucket-123456789012-devl-us-east-1-pipeline-12345`
 
 ## Best Practices Implemented
 
-- ✅ Versioning enabled by default
-- ✅ Public access blocked by default
-- ✅ Smart bucket naming with project prefix, account ID, environment, and region
-- ✅ Optional CI suffix support for unique deployments
-- ✅ Optional policy enforcement (encryption and secure transport)
-- ✅ Export values for cross-stack references
+### Security
+
+- ✅ **Versioning Always Enabled** — Protects against accidental deletion and enables recovery
+- ✅ **Public Access Blocking** — All four options enabled by default to prevent exposure
+- ✅ **Dual Encryption Options** — SSE-S3 (default, no cost) or SSE-KMS (customer-managed keys)
+- ✅ **Flexible Key Management** — Accepts key names, aliases, or ARNs for maximum compatibility
+- ✅ **Bucket Key Optimization** — Reduces KMS encryption costs with optional Bucket Key
+- ✅ **Resource Tagging** — Automatic tags for cost allocation and resource management
+
+### Operational
+
+- ✅ **Smart Bucket Naming** — Deterministic naming with project, account, environment, and region
+- ✅ **Access Logging** — Optional dedicated logging bucket with public access blocking
+- ✅ **Optional Website Hosting** — Static website support when needed
+- ✅ **CI/CD Support** — Optional CI suffix for ephemeral deployments
+- ✅ **Cross-Stack References** — Exported outputs for nested stack integration
+- ✅ **Comprehensive Metadata** — CFN Context documentation for architectural clarity
 
 ## License
 

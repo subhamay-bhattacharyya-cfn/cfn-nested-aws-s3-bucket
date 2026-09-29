@@ -1,0 +1,203 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Description: 'Nested CloudFormation template to create an S3 bucket with versioning and public access blocking'
+
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: "S3 Bucket Configuration"
+        Parameters:
+          - ProjectName
+          - BucketBaseName
+      - Label:
+          default: "Encryption Configuration"
+        Parameters:
+          - KmsKey
+          - EnableBucketKey
+      - Label:
+          default: "Advanced Configuration"
+        Parameters:
+          - Environment
+          - CiSuffix
+          - WebsiteConfiguration
+          - EnableLogging
+    ParameterLabels:
+      ProjectName:
+        default: "Project Name"
+      BucketBaseName:
+        default: "Bucket Base Name"
+      Environment:
+        default: "Environment"
+      CiSuffix:
+        default: "CI Suffix"
+      KmsKey:
+        default: "KMS Key (ARN / Alias)"
+      EnableBucketKey:
+        default: "Enable S3 Bucket Key"
+      WebsiteConfiguration:
+        default: "Enable Website Configuration"
+      EnableLogging:
+        default: "Enable S3 Logging"
+
+Parameters:
+  ProjectName:
+    Type: String
+    Description: "Project name to use as a bucket prefix"
+    MinLength: 1
+    MaxLength: 20
+    AllowedPattern: "^[a-z0-9-]+$"
+    ConstraintDescription: "Project name must be lowercase letters, numbers, and hyphens only"
+
+  BucketBaseName:
+    Type: String
+    Default: cfn-bucket
+    MinLength: 1
+    MaxLength: 20
+    AllowedPattern: "^[a-z0-9.-]+$"
+    ConstraintDescription: "Bucket base name must be 1-20 characters and can only contain lowercase letters, numbers, hyphens, and dots"
+    Description: Base name for the S3 bucket (account ID, environment, and region will be appended)
+
+  KmsKey:
+    Type: String
+    Default: ""
+    AllowedPattern: "^(alias/[a-zA-Z0-9_-]+|arn:aws:kms:[a-z0-9-]+:[0-9]+:key/[a-zA-Z0-9-]+|[a-zA-Z0-9_-]+)?$"
+    ConstraintDescription: "KMS Key can be a key name (e.g., my-key, auto-converted to alias/my-key), a KMS key alias (e.g., alias/my-key), or a full KMS key ARN (e.g., arn:aws:kms:region:account:key/key-id), or leave empty for no KMS encryption"
+    Description: "Optional KMS Key for S3 bucket encryption. Accepts: key name (my-key), alias (alias/my-key), or ARN (arn:aws:kms:region:account:key/key-id). Plain key names are auto-converted to aliases."
+
+  EnableBucketKey:
+    Type: String
+    Default: "false"
+    AllowedValues:
+      - "true"
+      - "false"
+    Description: "Enable S3 Bucket Key for KMS encryption cost optimization (only applicable when KmsKey is provided)"
+
+  Environment:
+    Type: String
+    Default: devl
+    Description: "Deployment environment for the S3 bucket"
+
+  CiSuffix:
+    Type: String
+    Default: ""
+    Description: "Optional CI prefix to append to the bucket name"
+
+  WebsiteConfiguration:
+    Type: String
+    Default: "false"
+    AllowedValues:
+      - "true"
+      - "false"
+    Description: "Enable website configuration on the S3 bucket"
+
+  EnableLogging:
+    Type: String
+    Default: "false"
+    AllowedValues:
+      - "true"
+      - "false"
+    Description: "Enable S3 access logging on the bucket"
+
+Conditions:
+  HasCiSuffix: !Not [!Equals [!Ref CiSuffix, ""]]
+  HasKmsKey: !Not [!Equals [!Ref KmsKey, ""]]
+  IsWebsiteConfigured: !Equals [!Ref WebsiteConfiguration, "true"]
+  IsLoggingEnabled: !Equals [!Ref EnableLogging, "true"]
+  IsBucketKeyEnabled: !Equals [!Ref EnableBucketKey, "true"]
+  IsKmsKeyArn: !Equals [!Select [0, !Split ["arn:", !Ref KmsKey]], ""]
+  IsKmsKeyAlias: !Equals [!Select [0, !Split ["alias/", !Ref KmsKey]], ""]
+
+Resources:
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    Metadata:
+      com.aws.cloudformation.Context:
+        why: "Provides a secure, reusable S3 bucket for nested stack deployments with configurable versioning, encryption, public access blocking, and optional website hosting"
+        must:
+          - "Must enforce public access blocking to prevent accidental exposure"
+          - "Must support optional KMS encryption for sensitive data protection"
+    Properties:
+      BucketName: !If
+        - HasCiSuffix
+        - !Sub '${ProjectName}-${BucketBaseName}-${AWS::AccountId}-${Environment}-${AWS::Region}-${CiSuffix}'
+        - !Sub '${ProjectName}-${BucketBaseName}-${AWS::AccountId}-${Environment}-${AWS::Region}'
+      VersioningConfiguration:
+        Status: Enabled
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: !If
+                - HasKmsKey
+                - "aws:kms"
+                - "AES256"
+              KMSMasterKeyID: !If
+                - HasKmsKey
+                - !If
+                  - IsKmsKeyArn
+                  - !Ref KmsKey
+                  - !If
+                    - IsKmsKeyAlias
+                    - !Ref KmsKey
+                    - !Sub "alias/${KmsKey}"
+                - !Ref AWS::NoValue
+            BucketKeyEnabled: !If
+              - IsBucketKeyEnabled
+              - true
+              - !Ref AWS::NoValue
+      WebsiteConfiguration: !If
+        - IsWebsiteConfigured
+        - IndexDocument: index.html
+        - !Ref AWS::NoValue
+      LoggingConfiguration: !If
+        - IsLoggingEnabled
+        - DestinationBucketName: !Ref LoggingBucket
+          LogFilePrefix: "access-logs/"
+        - !Ref AWS::NoValue
+      Tags:
+        - Key: ProjectName
+          Value: !Ref ProjectName
+        - Key: Environment
+          Value: !Ref Environment
+
+  LoggingBucket:
+    Type: AWS::S3::Bucket
+    Condition: IsLoggingEnabled
+    Metadata:
+      com.aws.cloudformation.Context:
+        why: "Dedicated S3 bucket for storing access logs from the primary S3 bucket to enable audit trails and monitoring without impacting primary bucket performance"
+        must:
+          - "Must have public access blocking to prevent accidental log exposure"
+    Properties:
+      BucketName: !If
+        - HasCiSuffix
+        - !Sub '${ProjectName}-${BucketBaseName}-logs-${AWS::AccountId}-${Environment}-${AWS::Region}-${CiSuffix}'
+        - !Sub '${ProjectName}-${BucketBaseName}-logs-${AWS::AccountId}-${Environment}-${AWS::Region}'
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      Tags:
+        - Key: ProjectName
+          Value: !Ref ProjectName
+        - Key: Environment
+          Value: !Ref Environment
+
+Outputs:
+  S3BucketName:
+    Description: "Name of the S3 bucket"
+    Value: !Ref S3Bucket
+    Export:
+      Name: !Sub "${AWS::StackName}-BucketName"
+
+  S3BucketArn:
+    Description: "ARN of the S3 bucket"
+    Value: !GetAtt S3Bucket.Arn
+    Export:
+      Name: !Sub "${AWS::StackName}-BucketArn"
