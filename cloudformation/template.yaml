@@ -43,6 +43,7 @@ Metadata:
 Parameters:
   ProjectName:
     Type: String
+    Default: "cfn-nested"
     Description: "Project name to use as a bucket prefix"
     MinLength: 1
     MaxLength: 20
@@ -51,7 +52,7 @@ Parameters:
 
   BucketBaseName:
     Type: String
-    Default: cfn-bucket
+    Default: "s3-bucket"
     MinLength: 1
     MaxLength: 20
     AllowedPattern: "^[a-z0-9.-]+$"
@@ -60,7 +61,7 @@ Parameters:
 
   KmsKey:
     Type: String
-    Default: ""
+    Default: "alias/SB-KMS"
     AllowedPattern: "^(alias/[a-zA-Z0-9_-]+|arn:aws:kms:[a-z0-9-]+:[0-9]+:key/[a-zA-Z0-9-]+|[a-zA-Z0-9_-]+)?$"
     ConstraintDescription: "KMS Key can be a key name (e.g., my-key, auto-converted to alias/my-key), a KMS key alias (e.g., alias/my-key), or a full KMS key ARN (e.g., arn:aws:kms:region:account:key/key-id), or leave empty for no KMS encryption"
     Description: "Optional KMS Key for S3 bucket encryption. Accepts: key name (my-key), alias (alias/my-key), or ARN (arn:aws:kms:region:account:key/key-id). Plain key names are auto-converted to aliases."
@@ -75,7 +76,11 @@ Parameters:
 
   Environment:
     Type: String
-    Default: devl
+    Default: "devl"
+    AllowedValues: 
+      - "devl"
+      - "test"
+      - "prod"
     Description: "Deployment environment for the S3 bucket"
 
   CiSuffix:

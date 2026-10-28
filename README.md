@@ -1,4 +1,4 @@
-# CloudFormation Template: S3 Bucket
+# CloudFormation Nested Stack Template :  S3 Bucket
 
 <!-- Row 1: Status - Most Important -->
 [![Release](https://github.com/subhamay-bhattacharyya-cfn/cfn-nested-aws-s3-bucket/actions/workflows/release.yaml/badge.svg)](https://github.com/subhamay-bhattacharyya-cfn/cfn-nested-aws-s3-bucket)&nbsp;[![GitHub Repo](https://img.shields.io/badge/GitHub-Repository-blue?logo=github)](https://github.com/subhamay-bhattacharyya-cfn/cfn-nested-aws-s3-bucket)&nbsp;[![Issues](https://img.shields.io/github/issues/subhamay-bhattacharyya-cfn/cfn-nested-aws-s3-bucket)](https://github.com/subhamay-bhattacharyya-cfn/cfn-nested-aws-s3-bucket/issues)&nbsp;[![Last Commit](https://img.shields.io/github/last-commit/subhamay-bhattacharyya-cfn/cfn-nested-aws-s3-bucket)](https://github.com/subhamay-bhattacharyya-cfn/cfn-nested-aws-s3-bucket/commits)

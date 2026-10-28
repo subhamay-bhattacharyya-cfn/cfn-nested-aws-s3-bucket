@@ -1,9 +1,9 @@
 {
-  "ProjectName": "subhamay",
-  "BucketBaseName": "cfn-bucket-test",
+  "ProjectName": "cfn-nested",
+  "BucketBaseName": "s3-bucket",
   "Environment": "devl",
   "CiSuffix": "",
-  "KmsKey": "alias/my-key",
+  "KmsKey": "alias/SB-KMS",
   "EnableBucketKey": "true",
   "EnableLogging": "false",
   "WebsiteConfiguration": "true"
