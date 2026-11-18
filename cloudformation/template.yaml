@@ -16,6 +16,13 @@ Metadata:
           - KmsKey
           - EnableBucketKey
       - Label:
+          default: "Event Notification Configuration"
+        Parameters:
+          - QueueArn
+          - QueueEvent
+          - QueueFilterPrefix
+          - QueueFilterSuffix
+      - Label:
           default: "Advanced Configuration"
         Parameters:
           - Environment
@@ -39,6 +46,14 @@ Metadata:
         default: "Enable Website Configuration"
       EnableLogging:
         default: "Enable S3 Logging"
+      QueueArn:
+        default: "SQS Queue ARN"
+      QueueEvent:
+        default: "S3 Event Type"
+      QueueFilterPrefix:
+        default: "Object Key Prefix Filter"
+      QueueFilterSuffix:
+        default: "Object Key Suffix Filter"
 
 Parameters:
   ProjectName:
@@ -104,12 +119,42 @@ Parameters:
       - "false"
     Description: "Enable S3 access logging on the bucket"
 
+  QueueArn:
+    Type: String
+    Default: ""
+    AllowedPattern: "^(arn:aws[a-zA-Z-]*:sqs:[a-z0-9-]+:[0-9]{12}:[A-Za-z0-9_-]{1,80})?$"
+    ConstraintDescription: "Queue ARN must be a standard SQS queue ARN (arn:aws:sqs:region:account-id:queue-name), or empty to disable event notifications"
+    Description: "Optional SQS queue ARN to receive S3 event notifications. Leave empty to disable. The queue policy must allow s3.amazonaws.com to send messages."
+
+  QueueEvent:
+    Type: String
+    Default: "s3:ObjectCreated:*"
+    AllowedPattern: "^s3:[A-Za-z0-9:*]+$"
+    ConstraintDescription: "Event must be a valid S3 event type, e.g. s3:ObjectCreated:* or s3:ObjectRemoved:*"
+    Description: "S3 event type that triggers a notification to the queue (only used when QueueArn is provided)"
+
+  QueueFilterPrefix:
+    Type: String
+    Default: ""
+    MaxLength: 1024
+    Description: "Optional object key prefix filter for queue notifications (only used when QueueArn is provided)"
+
+  QueueFilterSuffix:
+    Type: String
+    Default: ""
+    MaxLength: 1024
+    Description: "Optional object key suffix filter for queue notifications (only used when QueueArn is provided)"
+
 Conditions:
   HasCiSuffix: !Not [!Equals [!Ref CiSuffix, ""]]
   HasKmsKey: !Not [!Equals [!Ref KmsKey, ""]]
   IsWebsiteConfigured: !Equals [!Ref WebsiteConfiguration, "true"]
   IsLoggingEnabled: !Equals [!Ref EnableLogging, "true"]
   IsBucketKeyEnabled: !Equals [!Ref EnableBucketKey, "true"]
+  HasQueueArn: !Not [!Equals [!Ref QueueArn, ""]]
+  HasQueueFilterPrefix: !Not [!Equals [!Ref QueueFilterPrefix, ""]]
+  HasQueueFilterSuffix: !Not [!Equals [!Ref QueueFilterSuffix, ""]]
+  HasQueueFilter: !Or [!Condition HasQueueFilterPrefix, !Condition HasQueueFilterSuffix]
   IsKmsKeyArn: !Equals [!Select [0, !Split ["arn:", !Ref KmsKey]], ""]
   IsKmsKeyAlias: !Equals [!Select [0, !Split ["alias/", !Ref KmsKey]], ""]
 
@@ -163,6 +208,27 @@ Resources:
         - IsLoggingEnabled
         - DestinationBucketName: !Ref LoggingBucket
           LogFilePrefix: "access-logs/"
+        - !Ref AWS::NoValue
+      NotificationConfiguration: !If
+        - HasQueueArn
+        - QueueConfigurations:
+            - Event: !Ref QueueEvent
+              Queue: !Ref QueueArn
+              Filter: !If
+                - HasQueueFilter
+                - S3Key:
+                    Rules:
+                      - !If
+                        - HasQueueFilterPrefix
+                        - Name: prefix
+                          Value: !Ref QueueFilterPrefix
+                        - !Ref AWS::NoValue
+                      - !If
+                        - HasQueueFilterSuffix
+                        - Name: suffix
+                          Value: !Ref QueueFilterSuffix
+                        - !Ref AWS::NoValue
+                - !Ref AWS::NoValue
         - !Ref AWS::NoValue
       Tags:
         - Key: ProjectName
