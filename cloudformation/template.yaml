@@ -22,6 +22,22 @@ Metadata:
           - QueueEvent
           - QueueFilterPrefix
           - QueueFilterSuffix
+          - QueueArn2
+          - QueueEvent2
+          - QueueFilterPrefix2
+          - QueueFilterSuffix2
+          - QueueArn3
+          - QueueEvent3
+          - QueueFilterPrefix3
+          - QueueFilterSuffix3
+          - QueueArn4
+          - QueueEvent4
+          - QueueFilterPrefix4
+          - QueueFilterSuffix4
+          - QueueArn5
+          - QueueEvent5
+          - QueueFilterPrefix5
+          - QueueFilterSuffix5
       - Label:
           default: "Advanced Configuration"
         Parameters:
@@ -54,6 +70,38 @@ Metadata:
         default: "Object Key Prefix Filter"
       QueueFilterSuffix:
         default: "Object Key Suffix Filter"
+      QueueArn2:
+        default: "SQS Queue ARN 2"
+      QueueEvent2:
+        default: "S3 Event Type 2"
+      QueueFilterPrefix2:
+        default: "Object Key Prefix Filter 2"
+      QueueFilterSuffix2:
+        default: "Object Key Suffix Filter 2"
+      QueueArn3:
+        default: "SQS Queue ARN 3"
+      QueueEvent3:
+        default: "S3 Event Type 3"
+      QueueFilterPrefix3:
+        default: "Object Key Prefix Filter 3"
+      QueueFilterSuffix3:
+        default: "Object Key Suffix Filter 3"
+      QueueArn4:
+        default: "SQS Queue ARN 4"
+      QueueEvent4:
+        default: "S3 Event Type 4"
+      QueueFilterPrefix4:
+        default: "Object Key Prefix Filter 4"
+      QueueFilterSuffix4:
+        default: "Object Key Suffix Filter 4"
+      QueueArn5:
+        default: "SQS Queue ARN 5"
+      QueueEvent5:
+        default: "S3 Event Type 5"
+      QueueFilterPrefix5:
+        default: "Object Key Prefix Filter 5"
+      QueueFilterSuffix5:
+        default: "Object Key Suffix Filter 5"
 
 Parameters:
   ProjectName:
@@ -145,6 +193,110 @@ Parameters:
     MaxLength: 1024
     Description: "Optional object key suffix filter for queue notifications (only used when QueueArn is provided)"
 
+  QueueArn2:
+    Type: String
+    Default: ""
+    AllowedPattern: "^(arn:aws[a-zA-Z-]*:sqs:[a-z0-9-]+:[0-9]{12}:[A-Za-z0-9_-]{1,80})?$"
+    ConstraintDescription: "Queue ARN must be a standard SQS queue ARN (arn:aws:sqs:region:account-id:queue-name), or empty to disable this notification"
+    Description: "Optional SQS queue ARN for notification 2. Leave empty to disable. The queue policy must allow s3.amazonaws.com to send messages."
+
+  QueueEvent2:
+    Type: String
+    Default: "s3:ObjectCreated:*"
+    AllowedPattern: "^s3:[A-Za-z0-9:*]+$"
+    ConstraintDescription: "Event must be a valid S3 event type, e.g. s3:ObjectCreated:* or s3:ObjectRemoved:*"
+    Description: "S3 event type for notification 2 (only used when QueueArn2 is provided)"
+
+  QueueFilterPrefix2:
+    Type: String
+    Default: ""
+    MaxLength: 1024
+    Description: "Optional object key prefix filter for notification 2 (only used when QueueArn2 is provided)"
+
+  QueueFilterSuffix2:
+    Type: String
+    Default: ""
+    MaxLength: 1024
+    Description: "Optional object key suffix filter for notification 2 (only used when QueueArn2 is provided)"
+
+  QueueArn3:
+    Type: String
+    Default: ""
+    AllowedPattern: "^(arn:aws[a-zA-Z-]*:sqs:[a-z0-9-]+:[0-9]{12}:[A-Za-z0-9_-]{1,80})?$"
+    ConstraintDescription: "Queue ARN must be a standard SQS queue ARN (arn:aws:sqs:region:account-id:queue-name), or empty to disable this notification"
+    Description: "Optional SQS queue ARN for notification 3. Leave empty to disable. The queue policy must allow s3.amazonaws.com to send messages."
+
+  QueueEvent3:
+    Type: String
+    Default: "s3:ObjectCreated:*"
+    AllowedPattern: "^s3:[A-Za-z0-9:*]+$"
+    ConstraintDescription: "Event must be a valid S3 event type, e.g. s3:ObjectCreated:* or s3:ObjectRemoved:*"
+    Description: "S3 event type for notification 3 (only used when QueueArn3 is provided)"
+
+  QueueFilterPrefix3:
+    Type: String
+    Default: ""
+    MaxLength: 1024
+    Description: "Optional object key prefix filter for notification 3 (only used when QueueArn3 is provided)"
+
+  QueueFilterSuffix3:
+    Type: String
+    Default: ""
+    MaxLength: 1024
+    Description: "Optional object key suffix filter for notification 3 (only used when QueueArn3 is provided)"
+
+  QueueArn4:
+    Type: String
+    Default: ""
+    AllowedPattern: "^(arn:aws[a-zA-Z-]*:sqs:[a-z0-9-]+:[0-9]{12}:[A-Za-z0-9_-]{1,80})?$"
+    ConstraintDescription: "Queue ARN must be a standard SQS queue ARN (arn:aws:sqs:region:account-id:queue-name), or empty to disable this notification"
+    Description: "Optional SQS queue ARN for notification 4. Leave empty to disable. The queue policy must allow s3.amazonaws.com to send messages."
+
+  QueueEvent4:
+    Type: String
+    Default: "s3:ObjectCreated:*"
+    AllowedPattern: "^s3:[A-Za-z0-9:*]+$"
+    ConstraintDescription: "Event must be a valid S3 event type, e.g. s3:ObjectCreated:* or s3:ObjectRemoved:*"
+    Description: "S3 event type for notification 4 (only used when QueueArn4 is provided)"
+
+  QueueFilterPrefix4:
+    Type: String
+    Default: ""
+    MaxLength: 1024
+    Description: "Optional object key prefix filter for notification 4 (only used when QueueArn4 is provided)"
+
+  QueueFilterSuffix4:
+    Type: String
+    Default: ""
+    MaxLength: 1024
+    Description: "Optional object key suffix filter for notification 4 (only used when QueueArn4 is provided)"
+
+  QueueArn5:
+    Type: String
+    Default: ""
+    AllowedPattern: "^(arn:aws[a-zA-Z-]*:sqs:[a-z0-9-]+:[0-9]{12}:[A-Za-z0-9_-]{1,80})?$"
+    ConstraintDescription: "Queue ARN must be a standard SQS queue ARN (arn:aws:sqs:region:account-id:queue-name), or empty to disable this notification"
+    Description: "Optional SQS queue ARN for notification 5. Leave empty to disable. The queue policy must allow s3.amazonaws.com to send messages."
+
+  QueueEvent5:
+    Type: String
+    Default: "s3:ObjectCreated:*"
+    AllowedPattern: "^s3:[A-Za-z0-9:*]+$"
+    ConstraintDescription: "Event must be a valid S3 event type, e.g. s3:ObjectCreated:* or s3:ObjectRemoved:*"
+    Description: "S3 event type for notification 5 (only used when QueueArn5 is provided)"
+
+  QueueFilterPrefix5:
+    Type: String
+    Default: ""
+    MaxLength: 1024
+    Description: "Optional object key prefix filter for notification 5 (only used when QueueArn5 is provided)"
+
+  QueueFilterSuffix5:
+    Type: String
+    Default: ""
+    MaxLength: 1024
+    Description: "Optional object key suffix filter for notification 5 (only used when QueueArn5 is provided)"
+
 Conditions:
   HasCiSuffix: !Not [!Equals [!Ref CiSuffix, ""]]
   HasKmsKey: !Not [!Equals [!Ref KmsKey, ""]]
@@ -155,6 +307,23 @@ Conditions:
   HasQueueFilterPrefix: !Not [!Equals [!Ref QueueFilterPrefix, ""]]
   HasQueueFilterSuffix: !Not [!Equals [!Ref QueueFilterSuffix, ""]]
   HasQueueFilter: !Or [!Condition HasQueueFilterPrefix, !Condition HasQueueFilterSuffix]
+  HasQueueArn2: !Not [!Equals [!Ref QueueArn2, ""]]
+  HasQueueFilterPrefix2: !Not [!Equals [!Ref QueueFilterPrefix2, ""]]
+  HasQueueFilterSuffix2: !Not [!Equals [!Ref QueueFilterSuffix2, ""]]
+  HasQueueFilter2: !Or [!Condition HasQueueFilterPrefix2, !Condition HasQueueFilterSuffix2]
+  HasQueueArn3: !Not [!Equals [!Ref QueueArn3, ""]]
+  HasQueueFilterPrefix3: !Not [!Equals [!Ref QueueFilterPrefix3, ""]]
+  HasQueueFilterSuffix3: !Not [!Equals [!Ref QueueFilterSuffix3, ""]]
+  HasQueueFilter3: !Or [!Condition HasQueueFilterPrefix3, !Condition HasQueueFilterSuffix3]
+  HasQueueArn4: !Not [!Equals [!Ref QueueArn4, ""]]
+  HasQueueFilterPrefix4: !Not [!Equals [!Ref QueueFilterPrefix4, ""]]
+  HasQueueFilterSuffix4: !Not [!Equals [!Ref QueueFilterSuffix4, ""]]
+  HasQueueFilter4: !Or [!Condition HasQueueFilterPrefix4, !Condition HasQueueFilterSuffix4]
+  HasQueueArn5: !Not [!Equals [!Ref QueueArn5, ""]]
+  HasQueueFilterPrefix5: !Not [!Equals [!Ref QueueFilterPrefix5, ""]]
+  HasQueueFilterSuffix5: !Not [!Equals [!Ref QueueFilterSuffix5, ""]]
+  HasQueueFilter5: !Or [!Condition HasQueueFilterPrefix5, !Condition HasQueueFilterSuffix5]
+  HasAnyQueueArn: !Or [!Condition HasQueueArn, !Condition HasQueueArn2, !Condition HasQueueArn3, !Condition HasQueueArn4, !Condition HasQueueArn5]
   IsKmsKeyArn: !Equals [!Select [0, !Split ["arn:", !Ref KmsKey]], ""]
   IsKmsKeyAlias: !Equals [!Select [0, !Split ["alias/", !Ref KmsKey]], ""]
 
@@ -210,25 +379,108 @@ Resources:
           LogFilePrefix: "access-logs/"
         - !Ref AWS::NoValue
       NotificationConfiguration: !If
-        - HasQueueArn
+        - HasAnyQueueArn
         - QueueConfigurations:
-            - Event: !Ref QueueEvent
-              Queue: !Ref QueueArn
-              Filter: !If
-                - HasQueueFilter
-                - S3Key:
-                    Rules:
-                      - !If
-                        - HasQueueFilterPrefix
-                        - Name: prefix
-                          Value: !Ref QueueFilterPrefix
-                        - !Ref AWS::NoValue
-                      - !If
-                        - HasQueueFilterSuffix
-                        - Name: suffix
-                          Value: !Ref QueueFilterSuffix
-                        - !Ref AWS::NoValue
-                - !Ref AWS::NoValue
+            - !If
+              - HasQueueArn
+              - Event: !Ref QueueEvent
+                Queue: !Ref QueueArn
+                Filter: !If
+                  - HasQueueFilter
+                  - S3Key:
+                      Rules:
+                        - !If
+                          - HasQueueFilterPrefix
+                          - Name: prefix
+                            Value: !Ref QueueFilterPrefix
+                          - !Ref AWS::NoValue
+                        - !If
+                          - HasQueueFilterSuffix
+                          - Name: suffix
+                            Value: !Ref QueueFilterSuffix
+                          - !Ref AWS::NoValue
+                  - !Ref AWS::NoValue
+              - !Ref AWS::NoValue
+            - !If
+              - HasQueueArn2
+              - Event: !Ref QueueEvent2
+                Queue: !Ref QueueArn2
+                Filter: !If
+                  - HasQueueFilter2
+                  - S3Key:
+                      Rules:
+                        - !If
+                          - HasQueueFilterPrefix2
+                          - Name: prefix
+                            Value: !Ref QueueFilterPrefix2
+                          - !Ref AWS::NoValue
+                        - !If
+                          - HasQueueFilterSuffix2
+                          - Name: suffix
+                            Value: !Ref QueueFilterSuffix2
+                          - !Ref AWS::NoValue
+                  - !Ref AWS::NoValue
+              - !Ref AWS::NoValue
+            - !If
+              - HasQueueArn3
+              - Event: !Ref QueueEvent3
+                Queue: !Ref QueueArn3
+                Filter: !If
+                  - HasQueueFilter3
+                  - S3Key:
+                      Rules:
+                        - !If
+                          - HasQueueFilterPrefix3
+                          - Name: prefix
+                            Value: !Ref QueueFilterPrefix3
+                          - !Ref AWS::NoValue
+                        - !If
+                          - HasQueueFilterSuffix3
+                          - Name: suffix
+                            Value: !Ref QueueFilterSuffix3
+                          - !Ref AWS::NoValue
+                  - !Ref AWS::NoValue
+              - !Ref AWS::NoValue
+            - !If
+              - HasQueueArn4
+              - Event: !Ref QueueEvent4
+                Queue: !Ref QueueArn4
+                Filter: !If
+                  - HasQueueFilter4
+                  - S3Key:
+                      Rules:
+                        - !If
+                          - HasQueueFilterPrefix4
+                          - Name: prefix
+                            Value: !Ref QueueFilterPrefix4
+                          - !Ref AWS::NoValue
+                        - !If
+                          - HasQueueFilterSuffix4
+                          - Name: suffix
+                            Value: !Ref QueueFilterSuffix4
+                          - !Ref AWS::NoValue
+                  - !Ref AWS::NoValue
+              - !Ref AWS::NoValue
+            - !If
+              - HasQueueArn5
+              - Event: !Ref QueueEvent5
+                Queue: !Ref QueueArn5
+                Filter: !If
+                  - HasQueueFilter5
+                  - S3Key:
+                      Rules:
+                        - !If
+                          - HasQueueFilterPrefix5
+                          - Name: prefix
+                            Value: !Ref QueueFilterPrefix5
+                          - !Ref AWS::NoValue
+                        - !If
+                          - HasQueueFilterSuffix5
+                          - Name: suffix
+                            Value: !Ref QueueFilterSuffix5
+                          - !Ref AWS::NoValue
+                  - !Ref AWS::NoValue
+              - !Ref AWS::NoValue
         - !Ref AWS::NoValue
       Tags:
         - Key: ProjectName

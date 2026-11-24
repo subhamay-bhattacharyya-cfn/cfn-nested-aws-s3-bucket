@@ -14,7 +14,7 @@ This is a **CloudFormation template repository** that provides a reusable nested
 - Optional SSE-KMS encryption (key name, alias, or ARN), with optional Bucket Key
 - Optional access logging to a dedicated, locked-down logging bucket
 - Optional static website hosting
-- Optional S3 event notifications to an SQS queue, with prefix and suffix filters
+- Optional S3 event notifications to up to 5 SQS queues, each with prefix and suffix filters
 - Automated semantic versioning and releases from `main`
 - AWS OIDC authentication for CI deployments
 
@@ -109,14 +109,14 @@ The name must be unique per account and region, isolate environments, and be pre
 | ----- | ---------- |
 | S3 bucket | `ProjectName`, `BucketBaseName` |
 | Encryption | `KmsKey`, `EnableBucketKey` |
-| Event notifications | `QueueArn`, `QueueEvent`, `QueueFilterPrefix`, `QueueFilterSuffix` |
+| Event notifications | `QueueArn`, `QueueEvent`, `QueueFilterPrefix`, `QueueFilterSuffix` (slot 1), plus `…2`–`…5` suffixed variants for slots 2–5 |
 | Advanced | `Environment` (`devl`, `test`, `prod`), `CiSuffix`, `WebsiteConfiguration`, `EnableLogging` |
 
 Behavior that is easy to get wrong:
 
 - `KmsKey` empty → SSE-S3 (`AES256`). Otherwise SSE-KMS. Plain names are converted to `alias/<name>`.
 - `EnableBucketKey` only takes effect with a KMS key.
-- `QueueArn` empty → no `NotificationConfiguration`. When set, one `QueueConfigurations` entry is created with the `QueueEvent` event type. `Filter` appears only when a prefix or suffix is set.
+- `QueueArn` (and `QueueArn2`–`QueueArn5`) empty → that slot is skipped. If all are empty, there is no `NotificationConfiguration`. Each set slot adds one `QueueConfigurations` entry with its event type. `Filter` appears only when a prefix or suffix is set on that slot.
 - A queue used for notifications must be a standard SQS queue (not FIFO), and its policy must allow `s3.amazonaws.com` to send messages from this bucket. S3 checks this when the notification configuration is applied, so the queue policy must exist before the stack deploys.
 - Access logging (`EnableLogging=true`) creates `LoggingBucket` with the same public access blocks.
 

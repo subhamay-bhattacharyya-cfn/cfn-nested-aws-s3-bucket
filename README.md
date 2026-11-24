@@ -52,16 +52,16 @@ This is a **nested stack template** designed to be invoked from a parent/root Cl
 - ✅ **Static Website Hosting** — Enable with one parameter (configurable index document)
 - ✅ **CI/CD Support** — Optional CI suffix for unique ephemeral deployments
 - ✅ **Access Logging** — Optional server access logging to separate bucket with public access blocking
-- ✅ **Event Notifications** — Optional S3 event notifications to an SQS queue, with prefix and suffix key filters
+- ✅ **Event Notifications** — Up to 5 optional S3 event notifications to SQS queues, each with its own prefix and suffix key filters
 
 ## Parameters
 
 | Parameter | Type | Default | Required | Description |
 | ----------- | ------ | --------- | ---------- | ------------- |
 | `ProjectName` | String | — | ✅ Yes | Project name to use as bucket prefix |
-| `BucketBaseName` | String | `s3-bucket` | No | Base name for S3 bucket (1-20 chars, alphanumeric/dash/dot only) |
+| `BucketBaseName` | String | `s3-bucket` | No | Base name for S3 bucket (1-20 chars, lowercase letters, numbers, hyphens, and dots only) |
 | `KmsKey` | String | `""` | No | KMS key for encryption: key name (`my-key`), alias (`alias/my-key`), or ARN (`arn:aws:kms:...`). Empty = SSE-S3 |
-| `Environment` | String | `devl` | No | Deployment environment (devl, stag, prod, or custom) |
+| `Environment` | String | `devl` | No | Deployment environment (`devl`, `test`, or `prod`) |
 | `CiSuffix` | String | `""` | No | Optional CI suffix to append to bucket name for ephemeral deployments |
 | `WebsiteConfiguration` | String | `false` | No | Enable static website hosting (`true` or `false`). Sets index document to `index.html` |
 | `EnableLogging` | String | `false` | No | Enable S3 access logging (`true` or `false`). Creates dedicated logging bucket |
@@ -70,13 +70,18 @@ This is a **nested stack template** designed to be invoked from a parent/root Cl
 | `QueueEvent` | String | `s3:ObjectCreated:*` | No | S3 event type sent to the queue (e.g. `s3:ObjectCreated:*`, `s3:ObjectRemoved:*`). Only effective when `QueueArn` is set |
 | `QueueFilterPrefix` | String | `""` | No | Only send notifications for object keys starting with this prefix. Only effective when `QueueArn` is set |
 | `QueueFilterSuffix` | String | `""` | No | Only send notifications for object keys ending with this suffix (e.g. `.csv`). Only effective when `QueueArn` is set |
+| `QueueArn2`–`QueueArn5` | String | `""` | No | Optional queues for notifications 2–5. Same rules as `QueueArn` |
+| `QueueEvent2`–`QueueEvent5` | String | `s3:ObjectCreated:*` | No | Event type for notifications 2–5. Only effective when the matching `QueueArn` is set |
+| `QueueFilterPrefix2`–`QueueFilterPrefix5` | String | `""` | No | Prefix filter for notifications 2–5. Only effective when the matching `QueueArn` is set |
+| `QueueFilterSuffix2`–`QueueFilterSuffix5` | String | `""` | No | Suffix filter for notifications 2–5. Only effective when the matching `QueueArn` is set |
 
 **Notes:**
 - Only `ProjectName` is required; all other parameters have sensible defaults
 - `KmsKey` accepts three formats for maximum flexibility (auto-converts plain names to aliases)
 - `EnableBucketKey` requires a valid `KmsKey` to have effect (reduces KMS API calls and costs)
-- When `EnableLogging=true`, a separate logging bucket is created with identical security controls
-- `QueueEvent` takes a single event type per stack. To notify on several event types, deploy more than one stack or extend the template
+- When `EnableLogging=true`, a separate logging bucket is created with the same public access blocking (it is not versioned)
+- Each notification slot (1–5) has one event type and at most one prefix and one suffix filter (an S3 limit). To notify on several event types or filter combinations, use more slots
+- S3 rejects overlapping notifications with the same event type and filters to the same bucket, so keep the slots' filters distinct
 - The queue's access policy must allow `s3.amazonaws.com` to send messages from this bucket. S3 checks this when the notification configuration is applied, so create the queue with that policy before deploying the stack
 - The queue must be a standard SQS queue; FIFO queues are not supported as S3 notification destinations
 
@@ -86,6 +91,7 @@ This is a **nested stack template** designed to be invoked from a parent/root Cl
 | ----------- | ------------- |
 | `S3BucketName` | Name of the created S3 bucket (exported for cross-stack references) |
 | `S3BucketArn` | ARN of the created S3 bucket (exported for cross-stack references) |
+| `S3BucketWebsiteEndpoint` | Website endpoint of the bucket. Only returned when `WebsiteConfiguration=true` |
 
 ## Usage
 
@@ -117,6 +123,7 @@ S3BucketNestedStack:
       QueueEvent: "s3:ObjectCreated:*"  # Optional: S3 event type sent to the queue
       QueueFilterPrefix: ""           # Optional: only notify for keys with this prefix
       QueueFilterSuffix: ""           # Optional: only notify for keys with this suffix
+      # QueueArn2..QueueArn5 and matching QueueEvent/QueueFilterPrefix/QueueFilterSuffix (2-5) are optional extra notifications
     Tags:
       - Key: Environment
         Value: !Ref Environment
@@ -256,7 +263,7 @@ Example: `myproject-cfn-bucket-123456789012-devl-us-east-1-pipeline-12345`
 - ✅ **Access Logging** — Optional dedicated logging bucket with public access blocking
 - ✅ **Optional Website Hosting** — Static website support when needed
 - ✅ **CI/CD Support** — Optional CI suffix for ephemeral deployments
-- ✅ **Event Notifications** — Optional SQS notifications with prefix/suffix filters, disabled unless `QueueArn` is set
+- ✅ **Event Notifications** — Up to 5 optional SQS notifications with prefix/suffix filters, disabled unless `QueueArn` is set
 - ✅ **Cross-Stack References** — Exported outputs for nested stack integration
 - ✅ **Comprehensive Metadata** — CFN Context documentation for architectural clarity
 
