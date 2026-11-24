@@ -35,7 +35,7 @@ This is a **nested stack template** designed to be invoked from a parent/root Cl
 
 ### Core Features
 
-- ✅ **Versioning** — Always enabled for data protection and recovery
+- ✅ **Versioning** — Enabled by default for data protection and recovery. Set `EnableVersioning=false` to turn it off
 - ✅ **Public Access Blocking** — All four options enabled by default
 - ✅ **Smart Bucket Naming** — Automatic naming with project prefix, account ID, environment, and region
 - ✅ **Resource Tagging** — Automatic tags for ProjectName and Environment
@@ -65,6 +65,7 @@ This is a **nested stack template** designed to be invoked from a parent/root Cl
 | `CiSuffix` | String | `""` | No | Optional CI suffix to append to bucket name for ephemeral deployments |
 | `WebsiteConfiguration` | String | `false` | No | Enable static website hosting (`true` or `false`). Sets index document to `index.html` |
 | `EnableLogging` | String | `false` | No | Enable S3 access logging (`true` or `false`). Creates dedicated logging bucket |
+| `EnableVersioning` | String | `true` | No | Enable versioning on the S3 bucket (`true` or `false`) |
 | `EnableBucketKey` | String | `false` | No | Enable S3 Bucket Key for KMS cost optimization (`true` or `false`). Only effective with KMS encryption |
 | `QueueArn` | String | `""` | No | ARN of an SQS queue to receive S3 event notifications (`arn:aws:sqs:region:account-id:queue-name`). Empty = no notifications |
 | `QueueEvent` | String | `s3:ObjectCreated:*` | No | S3 event type sent to the queue (e.g. `s3:ObjectCreated:*`, `s3:ObjectRemoved:*`). Only effective when `QueueArn` is set |
@@ -119,6 +120,7 @@ S3BucketNestedStack:
       WebsiteConfiguration: "false"  # Optional: enable static hosting
       EnableLogging: "false"          # Optional: enable access logging
       EnableBucketKey: "false"        # Optional: reduce KMS costs
+      EnableVersioning: "true"        # Optional: bucket versioning (default true)
       QueueArn: !Ref QueueArnParameter  # Optional: SQS queue for S3 event notifications
       QueueEvent: "s3:ObjectCreated:*"  # Optional: S3 event type sent to the queue
       QueueFilterPrefix: ""           # Optional: only notify for keys with this prefix
@@ -250,7 +252,7 @@ Example: `myproject-cfn-bucket-123456789012-devl-us-east-1-pipeline-12345`
 
 ### Security
 
-- ✅ **Versioning Always Enabled** — Protects against accidental deletion and enables recovery
+- ✅ **Versioning Enabled by Default** — Protects against accidental deletion and enables recovery. Configurable with `EnableVersioning`
 - ✅ **Public Access Blocking** — All four options enabled by default to prevent exposure
 - ✅ **Dual Encryption Options** — SSE-S3 (default, no cost) or SSE-KMS (customer-managed keys)
 - ✅ **Flexible Key Management** — Accepts key names, aliases, or ARNs for maximum compatibility

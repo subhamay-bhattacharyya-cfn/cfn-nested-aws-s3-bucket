@@ -45,6 +45,7 @@ Metadata:
           - CiSuffix
           - WebsiteConfiguration
           - EnableLogging
+          - EnableVersioning
     ParameterLabels:
       ProjectName:
         default: "Project Name"
@@ -62,6 +63,8 @@ Metadata:
         default: "Enable Website Configuration"
       EnableLogging:
         default: "Enable S3 Logging"
+      EnableVersioning:
+        default: "Enable S3 Versioning"
       QueueArn:
         default: "SQS Queue ARN"
       QueueEvent:
@@ -166,6 +169,14 @@ Parameters:
       - "true"
       - "false"
     Description: "Enable S3 access logging on the bucket"
+
+  EnableVersioning:
+    Type: String
+    Default: "true"
+    AllowedValues:
+      - "true"
+      - "false"
+    Description: "Enable versioning on the S3 bucket"
 
   QueueArn:
     Type: String
@@ -302,6 +313,7 @@ Conditions:
   HasKmsKey: !Not [!Equals [!Ref KmsKey, ""]]
   IsWebsiteConfigured: !Equals [!Ref WebsiteConfiguration, "true"]
   IsLoggingEnabled: !Equals [!Ref EnableLogging, "true"]
+  IsVersioningEnabled: !Equals [!Ref EnableVersioning, "true"]
   IsBucketKeyEnabled: !Equals [!Ref EnableBucketKey, "true"]
   HasQueueArn: !Not [!Equals [!Ref QueueArn, ""]]
   HasQueueFilterPrefix: !Not [!Equals [!Ref QueueFilterPrefix, ""]]
@@ -341,8 +353,10 @@ Resources:
         - HasCiSuffix
         - !Sub '${ProjectName}-${BucketBaseName}-${AWS::AccountId}-${Environment}-${AWS::Region}-${CiSuffix}'
         - !Sub '${ProjectName}-${BucketBaseName}-${AWS::AccountId}-${Environment}-${AWS::Region}'
-      VersioningConfiguration:
-        Status: Enabled
+      VersioningConfiguration: !If
+        - IsVersioningEnabled
+        - Status: Enabled
+        - !Ref AWS::NoValue
       PublicAccessBlockConfiguration:
         BlockPublicAcls: true
         BlockPublicPolicy: true

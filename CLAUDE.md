@@ -10,7 +10,7 @@ This is a **CloudFormation template repository** that provides a reusable nested
 
 - One nested template: `cloudformation/template.yaml`
 - Parameterized bucket naming with project, account ID, environment, and region
-- S3 security defaults: versioning enabled, all four public access blocks enabled
+- S3 security defaults: versioning enabled by default (configurable), all four public access blocks enabled
 - Optional SSE-KMS encryption (key name, alias, or ARN), with optional Bucket Key
 - Optional access logging to a dedicated, locked-down logging bucket
 - Optional static website hosting
@@ -110,7 +110,7 @@ The name must be unique per account and region, isolate environments, and be pre
 | S3 bucket | `ProjectName`, `BucketBaseName` |
 | Encryption | `KmsKey`, `EnableBucketKey` |
 | Event notifications | `QueueArn`, `QueueEvent`, `QueueFilterPrefix`, `QueueFilterSuffix` (slot 1), plus `…2`–`…5` suffixed variants for slots 2–5 |
-| Advanced | `Environment` (`devl`, `test`, `prod`), `CiSuffix`, `WebsiteConfiguration`, `EnableLogging` |
+| Advanced | `Environment` (`devl`, `test`, `prod`), `CiSuffix`, `WebsiteConfiguration`, `EnableLogging`, `EnableVersioning` |
 
 Behavior that is easy to get wrong:
 
@@ -122,7 +122,7 @@ Behavior that is easy to get wrong:
 
 ### Security Controls
 
-- Versioning always enabled on the primary bucket
+- Versioning on the primary bucket is controlled by `EnableVersioning` (default `true`). When `false`, `VersioningConfiguration` is omitted (not `Suspended`).
 - All four public access block settings on both buckets
 - `Metadata` → `com.aws.cloudformation.Context` documents the intent and must-rules of each bucket. Keep these in sync when behavior changes.
 
